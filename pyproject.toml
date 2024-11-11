@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "mail-helper"
+version = "0.1.0"
+description = ""
+authors = ["Thomas Horrut"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv-vault = "^0.6.4"
+
+[tool.poetry.dev-dependencies]
+certifi = "^2024.8.30"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
