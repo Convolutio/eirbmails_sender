@@ -1,3 +1,4 @@
+import argparse
 import smtplib
 import imaplib
 import ssl
@@ -33,8 +34,8 @@ shared_email_sent_box_name = get_nonnull_env("SENDER_SHARED_EMAIL_SENT_BOX_NAME"
 shared_email_with_org_name = f"{shared_organization} <{shared_email}>" if shared_organization is not None else shared_email
 
 def write_mail(html_version: str, txt_version: str):
-    to_email = sender_email # TODO: input("Prompt your recipient's mail: ")
-    subject = "Test mail" # TODO: input("What is your message's subject: ")
+    to_email = input("Prompt your recipient's mail: ")
+    subject = input("What is your message's subject: ")
 
     message = MIMEMultipart("alternative")
     message['From'] = shared_email_with_org_name  # Adresse de la boîte partagée X
@@ -66,8 +67,21 @@ def write_mail(html_version: str, txt_version: str):
     except Exception as e:
         print(f"Error while sending the mail : {e}")
 
+def read_file(fp):
+    txt = ""
+    with open(fp, 'r', encoding="utf-8") as f:
+        txt = f.read()
+    return txt
+
+def main(txt_mail_path, html_mail_path):
+    # Here you can add code to read from input_filepath and write to output_filepath
+    write_mail(read_file(html_mail_path), read_file(txt_mail_path))
+
 if __name__ == "__main__":
-    # Corps du message
-    text_version = f"La version texte de l\'email envoyé par {sender_email} au nom de {shared_email_with_org_name} n'est pas encore définissable par l'utilisateur. Il suffirait juste de remplacer ce texte en dur par n'importe quel autre texte. Je crois qu'ici on peut tout faire pour les emojis"
-    html_version = sys.stdin.read()
-    write_mail(html_version, text_version)
+    parser = argparse.ArgumentParser(description="Process the txt and html email body files.")
+    parser.add_argument("txt_mail_filepath", type=str, help="Path to the txt mail file")
+    parser.add_argument("html_mail_filepath", type=str, help="Path to the html mail file")
+
+    args = parser.parse_args()
+    main(args.txt_mail_filepath, args.html_mail_filepath)
+
